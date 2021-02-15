@@ -1,0 +1,15 @@
+*{
+    background: rgb(61, 58, 58);
+    color: rgb(187, 187, 187);
+}
+
+h4 {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.tempList {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-row: auto auto;
+}
