@@ -20,7 +20,6 @@ fBtn.addEventListener('click', () => {
         temperature.removeChild(temperature.lastChild)
         minTemp.removeChild(minTemp.lastChild)
         maxTemp.removeChild(maxTemp.lastChild)
-        console.log(currentTemp);
         let fTemp = 1.8 * (currentTemp) + 32;
         let fMin = 1.8 * (currentMin) + 32;
         let fMax = 1.8 * (currentMax) + 32;
@@ -56,76 +55,50 @@ cBtn.addEventListener('click', () => {
 
 searchBtn.addEventListener('click', () => {
     event.preventDefault();
-    let weatherAPI = `http://api.openweathermap.org/data/2.5/weather?q=${search.value}&APPID=8b53cc1dbafbd58a0b8cc34de4dcd7cb`;
-    console.log(weatherAPI);
-    fetch(weatherAPI, {mode: 'cors'})
-.then(function(response) {
-    return response.json();
-})
-.then(function(response) {
-    //container.appendChild(country);
+    async function searchWeather() {
+    weatherAPI = `http://api.openweathermap.org/data/2.5/weather?q=${search.value}&APPID=8b53cc1dbafbd58a0b8cc34de4dcd7cb`;
+    const response = await fetch(weatherAPI, {mode: 'cors'});
+    const weatherData = await response.json();
+
     temperature.removeChild(temperature.lastChild)
     minTemp.removeChild(minTemp.lastChild)
     maxTemp.removeChild(maxTemp.lastChild)
     humidity.removeChild(humidity.lastChild)
     windSpeed.removeChild(windSpeed.lastChild)
     weather.removeChild(weather.lastChild)
-    //let city = document.createElement('h3');
     let location = document.createElement('h3');
-    location.innerHTML = `${response.name}, ${response.sys.country}`;
-    //city.innerHTML = response.name;
-    //country.innerHTML = response.sys.country;
+    location.innerHTML = `${weatherData.name}, ${weatherData.sys.country}`;
     container.before(location);
-    //container.before(country);
-    //container.insertBefore(country, city);
-    //container.appendChild(country);
-    let fTemp = 1.8 * (response.main.temp -273) + 32;
-    let fmin = 1.8 * (response.main.temp_min -273) + 32;
-    let fmax = 1.8 * (response.main.temp_max -273) + 32;
+    let fTemp = 1.8 * (weatherData.main.temp -273) + 32;
+    let fmin = 1.8 * (weatherData.main.temp_min -273) + 32;
+    let fmax = 1.8 * (weatherData.main.temp_max -273) + 32;
     currentTemp = fTemp;
     currentMin = fmin;
     currentMax = fmax;
     temperature.innerHTML += fTemp.toFixed(2);
     minTemp.innerHTML += fmin.toFixed(2);
     maxTemp.innerHTML += fmax.toFixed(2);
-    humidity.innerHTML += response.main.humidity;
-    windSpeed.innerHTML += response.wind.speed;
-    weather.innerHTML += response.weather[0].main;
+    humidity.innerHTML += weatherData.main.humidity;
+    windSpeed.innerHTML += weatherData.wind.speed;
+    weather.innerHTML += weatherData.weather[0].main;
     if(cBtn.classList.contains('active')) {
         fBtn.classList.toggle('active');
         cBtn.classList.toggle('active');
     }
-})
-.catch(function(error) {
-    alert("no results found");
-}); 
-
+}
+searchWeather();
 });
 
-fetch('http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=8b53cc1dbafbd58a0b8cc34de4dcd7cb', {mode: 'cors'})
-.then(function(response) {
-    return response.json();
-})
-.then(function(response) {
-    console.log(response);
-    console.log(response.main.temp);
-    console.log(response.main.temp_min);
-    console.log(response.main.temp_max);
-    console.log(response.main.humidity);
-    console.log(response.wind.speed);
-    console.log(response.weather[0].main);
-    //let city = document.createElement('h3');
+async function defaultWeather() {
+
+    const defaultResponse = await fetch('http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=8b53cc1dbafbd58a0b8cc34de4dcd7cb', {mode: 'cors'});
+    const defaultWeatherData = await defaultResponse.json();
     let location = document.createElement('h3');
-    location.innerHTML = `${response.name}, ${response.sys.country}`;
-    //city.innerHTML = response.name;
-    //country.innerHTML = response.sys.country;
+    location.innerHTML = `${defaultWeatherData.name}, ${defaultWeatherData.sys.country}`;
     container.before(location);
-    //container.before(country);
-    //container.insertBefore(country, city);
-    //container.appendChild(country);
-    let fTemp = 1.8 * (response.main.temp -273) + 32;
-    let fmin = 1.8 * (response.main.temp_min -273) + 32;
-    let fmax = 1.8 * (response.main.temp_max -273) + 32;
+    let fTemp = 1.8 * (defaultWeatherData.main.temp -273) + 32;
+    let fmin = 1.8 * (defaultWeatherData.main.temp_min -273) + 32;
+    let fmax = 1.8 * (defaultWeatherData.main.temp_max -273) + 32;
     currentTemp = fTemp;
     currentMin = fmin;
     currentMax = fmax;
@@ -133,8 +106,9 @@ fetch('http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=8b53cc1d
     temperature.innerHTML += fTemp.toFixed(2);
     minTemp.innerHTML += fmin.toFixed(2);
     maxTemp.innerHTML += fmax.toFixed(2);
-    humidity.innerHTML += response.main.humidity;
-    windSpeed.innerHTML += response.wind.speed;
-    weather.innerHTML += response.weather[0].main;
+    humidity.innerHTML += defaultWeatherData.main.humidity;
+    windSpeed.innerHTML += defaultWeatherData.wind.speed;
+    weather.innerHTML += defaultWeatherData.weather[0].main;
 
-});
+}
+defaultWeather();

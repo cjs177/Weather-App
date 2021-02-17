@@ -13,3 +13,8 @@ h4 {
     grid-template-columns: auto auto auto;
     grid-row: auto auto;
 }
+
+.active {
+    background: rgb(187, 187, 187);
+    color: rgb(61, 58, 58);
+}
